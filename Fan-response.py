@@ -1,0 +1,38 @@
+#requires installing adafruit-circuitpython-bmp280 library and gpiozero; implementation of plotting to be added
+
+from time import sleep
+import board
+import adafruit_bmp280
+from gpiozero import Motor
+from matplotlib import pyplot as plt
+
+i2c = board.I2C()
+bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c,address=0x76)
+mot = Motor(forward = 18, backward = 19, enable = 17, pwm = True)
+
+bmp280.sea_level_pressure = 1013.25
+
+def loop():
+    while True:
+        print("\nTemperature: %0.1f C"%bmp280.temperature)
+        print("Pressure:%0.1f hPa" % bmp280.pressure)
+        print("Altitude = %0.2f meters" % bmp280.altitude)
+        if bmp280.temperature > 30:
+            mot.forward(1)
+        elif bmp280.temperature >25:
+            mot.forward(.8)
+        elif bmp280.temperature > 20:
+            mot.forward(1)
+            sleep(.2)
+            mot.forward(.5)
+        else:
+            mot.forward(0)
+        sleep(2)
+
+if __name__ == "__main__":
+    try:
+        loop()
+    except KeyboardInterrupt:
+        print("end")
+        i2c.deinit()
+        mot.close()
