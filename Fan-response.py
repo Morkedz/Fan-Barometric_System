@@ -14,6 +14,14 @@ y=[]
 
 bmp280.sea_level_pressure = 1013.25
 
+def get_temp():
+    try:
+        return bmp280.temperature
+    except OSError:
+        print("Sensor glitch")
+        sleep(.1)
+        return None
+
 def loop():
     count = 0
     while True:
@@ -30,7 +38,10 @@ def loop():
             mot.forward(.5)
         else:
             mot.forward(0)
-        y.append(bmp280.temperature)
+        temp = get_temp()
+        if temp is None:
+            continue
+        y.append(temp)
         x.append(count)
         sleep(2)
         count+=2
