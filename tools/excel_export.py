@@ -1,5 +1,3 @@
-#Work in progress
-
 import subprocess
 import pandas as pd
 import io
@@ -28,4 +26,4 @@ def export_kern_excel():
     print(f"Kernel data successfully exported to {filename}")
 
 if __name__ == "__main__":
-    export_kernel_to_excel()
+    export_kern_excel()
