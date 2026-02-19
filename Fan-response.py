@@ -5,10 +5,13 @@ import board
 import adafruit_bmp280
 from gpiozero import Motor
 from matplotlib import pyplot as plt
+import pandas as pd
+from datetime import datetime
 
 i2c = board.I2C()
 bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c,address=0x76)
 mot = Motor(forward = 18, backward = 19, enable = 17, pwm = True)
+logs=[]
 x=[]
 y=[]
 
@@ -43,6 +46,12 @@ def loop():
             continue
         y.append(temp)
         x.append(count)
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        logs.append({
+            "Timestamp": timestamp,
+            "Temperature (C)": temp,
+            "Pressure (hPa)": bmp280.pressure
+        })
         sleep(2)
         count+=2
 
@@ -50,7 +59,12 @@ if __name__ == "__main__":
     try:
         loop()
     except KeyboardInterrupt:
-        print("end")
+        print("Stop system and exporting data")
+        if logs:
+            df = pd.DataFrame(logs)
+            df.to_excel("barometric_fan_readings.xlsx", index=False)
+        else:
+            print("Failed to export")
         plt.plot(x,y)
         plt.xlabel("time (s)")
         plt.ylabel("temperature (c)")
