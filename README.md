@@ -10,4 +10,4 @@ Impact: Electrical Circuit broken, total loss of fan actuation
 
 Root Cause: Mechanical stress/vibration at the connection point.
 
-Fix: February 21, 2027. Soldered severed wire onto fan joint. Reinforced/potted area with hot glue to prevent mechanical stress.
+Fix: February 21, 2026. Soldered severed wire onto fan joint. Reinforced/potted area with hot glue to prevent mechanical stress.
